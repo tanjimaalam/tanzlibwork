@@ -1,7 +1,7 @@
 from selenium import webdriver
 import json
 
-with open('./temp/linksToBeClicked.json') as json_file:
+with open('./output/linksToBeClicked.json') as json_file:
     linksToBeClicked = json.load(json_file)
 
 

@@ -47,17 +47,6 @@ def find_Word(word):
         if(td1_all[i].text.find(word) != -1):
             href = td1_all[i +
                            1].find_element_by_tag_name('a').get_attribute('href')
-            textFile = open("sample.txt", "a")
-            textFile.write(td1_all[i].text)
-            textFile.write('\n')
-            textFile.write(td1_all[i+1].text)
-            textFile.write('\n')
-            textFile.write(href)
-            textFile.write('\n')
-            textFile.write("-----------")
-            textFile.write('\n')
-            textFile.close()
-
             # linksToBeClicked.append(td1_all[i+1])
 
             linksToBeClicked.append(href)
@@ -68,7 +57,7 @@ pageCount = 0
 
 def dumpIntoJson():
     # write linksToBeClicked into a file
-    with open('./temp/linksToBeClicked.json', 'w+') as outfile:
+    with open('./output/linksToBeClicked.json', 'w+') as outfile:
         json.dump(linksToBeClicked, outfile)
         outfile.close()
 
