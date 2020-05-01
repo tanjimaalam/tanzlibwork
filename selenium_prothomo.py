@@ -1,4 +1,5 @@
 from selenium import webdriver
+TRY_PAGES = 2
 
 driver = webdriver.Chrome()
 ccnyLibUrl = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/?func=find-b-0&local_base=city&fbclid=IwAR1WZIh0tPZIzKOOTEI4tHCH_7_vNNeLL8jElor7z7kcwj7hgUKlKCOneBQ'
@@ -42,22 +43,21 @@ def find_Word(word):
     td1_all = driver.find_elements_by_class_name('td1')
     for i in range(len(td1_all)):
         if(td1_all[i].text.find(word) != -1):
-            print('-----------------')
-            print(td1_all[i].text)
-            print(td1_all[i+1].text)
-
-            textFile = open("sample.txt", "a")
+            href = td1_all[i +
+                           1].find_element_by_tag_name('a').get_attribute('href')
+            textFile = open("sample.txt", "w")
             textFile.write(td1_all[i].text)
             textFile.write('\n')
             textFile.write(td1_all[i+1].text)
+            textFile.write('\n')
+            textFile.write(href)
             textFile.write('\n')
             textFile.write("-----------")
             textFile.write('\n')
             textFile.close()
 
             # linksToBeClicked.append(td1_all[i+1])
-            href = td1_all[i +
-                           1].find_element_by_tag_name('a').get_attribute('href')
+
             linksToBeClicked.append(href)
 
 
@@ -73,7 +73,7 @@ def runAutomationRecursive():
     print(nextPageButton())
 
     # if nextPageButton() is not None:
-    if pageCount <= 3:
+    if pageCount <= TRY_PAGES:
         nextPageButton().click()
         runAutomationRecursive()
     else:
@@ -85,9 +85,27 @@ runAutomationRecursive()
 print('successfully finished')
 print('pages scraped: ')
 print(pageCount)
+driver.close()
 
 
+# open links and find location and call number
 for i in range(len(linksToBeClicked)):
     print(linksToBeClicked[i])
+    newDriver = webdriver.Chrome()
+    newDriver.get(linksToBeClicked[i])
 
-driver.close()
+    loc_callNum_link = newDriver.find_element_by_class_name(
+        'button-link').find_element_by_xpath('..')
+    loc_callNum_link.click()
+
+    currentCallNumber = newDriver.find_element_by_class_name(
+        'loc-call-number').text
+    currentBookDescription = newDriver.find_element_by_id('bib-detail').text
+
+    callNumbersTXT = open('callNumbers.txt', "w")
+    callNumbersTXT.write(currentCallNumber)
+    callNumbersTXT.write('\n')
+    callNumbersTXT.write(currentBookDescription)
+    callNumbersTXT.write('\n')
+    callNumbersTXT.write('------')
+    callNumbersTXT.write('\n')
