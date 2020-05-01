@@ -1,5 +1,5 @@
 from selenium import webdriver
-TRY_PAGES = 20
+TRY_PAGES = 2
 
 
 driver = webdriver.Chrome()
@@ -69,7 +69,7 @@ def runAutomationRecursive():
     global pageCount
     pageCount += 1
     find_Word('Oversize')
-    find_Word(' X')
+    #find_Word(' X')
 
     print(nextPageButton())
 
@@ -104,6 +104,34 @@ for i in range(len(linksToBeClicked)):
     currentCallNumber = newDriver.find_element_by_class_name(
         'loc-call-number').text
     currentBookDescription = newDriver.find_element_by_id('bib-detail').text
+    currentLocation = newDriver.find_element_by_class_name(
+        'loc-code-global-body').text
+
+    currentItemStatus = newDriver.find_element_by_class_name(
+        'loc-status').text
+
+    # Expand
+    currentExpandAnchor = newDriver.find_element_by_class_name(
+        'loc-library').find_element_by_xpath('..').find_element_by_class_name('td1').find_element_by_tag_name('a')
+    currentExpandAnchor.click()
+    currentBarCode = newDriver.find_element_by_xpath(
+        '/html/body/table[3]/tbody/tr[11]/td[2]').text
+
+    # go back 2 steps
+    newDriver.execute_script("window.history.go(-2)")
+    marcLink = newDriver.find_element_by_xpath(
+        '/html/body/table[4]/tbody/tr/td/a[3]')
+    marcLink.click()
+
+    # find SYS
+    """ currentSYS = newDriver.find_element_by_xpath(
+        '/html/body/table[5]/tbody/tr[39]/td[2]').text """
+    currentSYS = ''
+    td_all = newDriver.find_elements_by_tag_name('td')
+    for i in range(len(td_all)):
+        if(td_all[i].text == 'SYS'):
+            currentSYS = td_all[i+1].text
+            break
 
     callNumbersTXT = open('callNumbers.txt', "w")
     callNumbersTXT.write(currentCallNumber)
@@ -116,11 +144,30 @@ for i in range(len(linksToBeClicked)):
     htmlContentInfo.append(
         {
             "currentCallNumber": currentCallNumber,
-            "currentBookDescription": currentBookDescription
+            "currentBookDescription": currentBookDescription,
+            "currentBarCode": str(currentBarCode),
+            "currentItemStatus": currentItemStatus,
+            "currentLocation": currentLocation,
+            "currentSYS": str(currentSYS)
         }
     )
 
     newDriver.close()
+
+
+def makeCSV():
+    csvFile = open('./outputCSV.csv', 'a')
+
+    for i in range(len(htmlContentInfo)):
+        csvFile.write(htmlContentInfo[i]["currentSYS"] + ',')
+        csvFile.write(htmlContentInfo[i]["currentCallNumber"] + ',')
+        # csvFile.write(htmlContentInfo[i]["currentBookDescription"] + ',')
+        csvFile.write('book name' + ',')
+        csvFile.write(htmlContentInfo[i]["currentBarCode"] + ',')
+        csvFile.write(htmlContentInfo[i]["currentLocation"] + ',')
+        csvFile.write(htmlContentInfo[i]["currentItemStatus"] + ',')
+        csvFile.write('\n')
+    csvFile.close()
 
 
 def makeHTML():
@@ -128,13 +175,28 @@ def makeHTML():
     for i in range(len(htmlContentInfo)):
 
         bodyContent += '<div class="infoContainer">'
+
         bodyContent += '<div class="callNumber">'
-        bodyContent += htmlContentInfo[i]["currentCallNumber"]
+        bodyContent += 'Call # ' + htmlContentInfo[i]["currentCallNumber"]
         bodyContent += '</div>'
 
         bodyContent += '<div class="description">'
-        bodyContent += htmlContentInfo[i]["currentBookDescription"]
+        bodyContent += 'Title: ' + htmlContentInfo[i]["currentBookDescription"]
         bodyContent += '</div>'
+        bodyContent += '<div class="barcode">'
+        bodyContent += 'Barcode: ' + htmlContentInfo[i]["currentBarCode"]
+        bodyContent += '</div>'
+        bodyContent += '<div class="location">'
+        bodyContent += 'Location: ' + htmlContentInfo[i]["currentLocation"]
+        bodyContent += '</div>'
+        bodyContent += '<div class="item-status">'
+        bodyContent += 'Item Status: ' + \
+            htmlContentInfo[i]["currentItemStatus"]
+        bodyContent += '</div>'
+        bodyContent += '<div class="SYS">'
+        bodyContent += 'SYS: ' + htmlContentInfo[i]["currentSYS"]
+        bodyContent += '</div>'
+
         bodyContent += '</div>'
 
     headerFile = open("./templates/header.txt", "r")
@@ -149,3 +211,4 @@ def makeHTML():
 
 
 makeHTML()
+makeCSV()
