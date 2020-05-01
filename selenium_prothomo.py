@@ -1,5 +1,6 @@
 from selenium import webdriver
-TRY_PAGES = 2
+TRY_PAGES = 20
+
 
 driver = webdriver.Chrome()
 ccnyLibUrl = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/?func=find-b-0&local_base=city&fbclid=IwAR1WZIh0tPZIzKOOTEI4tHCH_7_vNNeLL8jElor7z7kcwj7hgUKlKCOneBQ'
@@ -45,7 +46,7 @@ def find_Word(word):
         if(td1_all[i].text.find(word) != -1):
             href = td1_all[i +
                            1].find_element_by_tag_name('a').get_attribute('href')
-            textFile = open("sample.txt", "w")
+            textFile = open("sample.txt", "a")
             textFile.write(td1_all[i].text)
             textFile.write('\n')
             textFile.write(td1_all[i+1].text)
@@ -88,6 +89,8 @@ print(pageCount)
 driver.close()
 
 
+htmlContentInfo = []
+
 # open links and find location and call number
 for i in range(len(linksToBeClicked)):
     print(linksToBeClicked[i])
@@ -109,3 +112,40 @@ for i in range(len(linksToBeClicked)):
     callNumbersTXT.write('\n')
     callNumbersTXT.write('------')
     callNumbersTXT.write('\n')
+
+    htmlContentInfo.append(
+        {
+            "currentCallNumber": currentCallNumber,
+            "currentBookDescription": currentBookDescription
+        }
+    )
+
+    newDriver.close()
+
+
+def makeHTML():
+    bodyContent = ""
+    for i in range(len(htmlContentInfo)):
+
+        bodyContent += '<div class="infoContainer">'
+        bodyContent += '<div class="callNumber">'
+        bodyContent += htmlContentInfo[i]["currentCallNumber"]
+        bodyContent += '</div>'
+
+        bodyContent += '<div class="description">'
+        bodyContent += htmlContentInfo[i]["currentBookDescription"]
+        bodyContent += '</div>'
+        bodyContent += '</div>'
+
+    headerFile = open("./templates/header.txt", "r")
+    footerFile = open('./templates/footer.txt', 'r')
+    headerContent = headerFile.read()
+    footerContent = footerFile.read()
+
+    outputFileContent = headerContent + bodyContent + footerContent
+    outputHTML = open('output.html', 'w+')
+    outputHTML.write(outputFileContent)
+    outputHTML.close()
+
+
+makeHTML()
