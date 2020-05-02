@@ -4,12 +4,25 @@ TRY_PAGES = 2
 currentPageURL = ''
 
 driver = webdriver.Chrome()
-lastLink = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/IUEJYTKRKEGK748D48PYP19JG436QUNIVK6GBMK614S6DQ7LX5-14512?func=scan-ind-continue&code=SHL&find_scan_code=SCAN_SHL&filing_text=ml%22172%20c86%20x%20oversize%200&sequence=001116399'
-driver.get(lastLink)
+ccnyLibUrl = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/?func=find-b-0&local_base=city&fbclid=IwAR1WZIh0tPZIzKOOTEI4tHCH_7_vNNeLL8jElor7z7kcwj7hgUKlKCOneBQ'
 
-linksToBeClicked = []
-with open('./output/linksToBeClicked.json') as json_file:
-    linksToBeClicked = json.load(json_file)
+# loading the page
+driver.get(ccnyLibUrl)
+
+# clicking the call number option in the fixed dropdown
+callNumberOption = driver.find_element_by_xpath(
+    '/html/body/form/table/tbody/tr/td[2]/select/option[10]')
+callNumberOption.click()
+
+# insert ML in search field
+searchBox = driver.find_element_by_xpath(
+    '/html/body/form/table/tbody/tr/td[3]/input[1]')
+searchBox.send_keys('ML')
+
+# initiate searching
+searchButton = driver.find_element_by_xpath(
+    '/html/body/form/table/tbody/tr/td[3]/input[2]')
+searchButton.click()
 
 
 def nextPageButton():
@@ -23,6 +36,9 @@ def nextPageButton():
             return None """
 
 
+linksToBeClicked = []
+
+
 def find_Word(word):
     global linksToBeClicked
 
@@ -31,7 +47,6 @@ def find_Word(word):
         if(td1_all[i].text.find(word) != -1):
             href = td1_all[i +
                            1].find_element_by_tag_name('a').get_attribute('href')
-
             # linksToBeClicked.append(td1_all[i+1])
 
             linksToBeClicked.append(href)
@@ -42,9 +57,10 @@ pageCount = 0
 
 def dumpIntoJson():
     # write linksToBeClicked into a file
-    with open('./output/linksToBeClicked.json', 'w+') as outfile:
-        json.dump(linksToBeClicked, outfile)
-        outfile.close()
+    # with open('./output/linksToBeClicked.json', 'w+') as outfile:
+    outputJSON = open('./output/linksToBeClicked.json', 'w+')
+    json.dump(linksToBeClicked, outputJSON)
+    outputJSON.close()
 
 
 def runAutomationRecursive():
@@ -72,3 +88,6 @@ print('successfully finished')
 print('pages scraped: ')
 print(pageCount)
 driver.close()
+
+
+htmlContentInfo = []

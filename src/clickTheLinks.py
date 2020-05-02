@@ -1,8 +1,9 @@
 from selenium import webdriver
 import json
 
-with open('./output/linksToBeClicked.json') as json_file:
-    linksToBeClicked = json.load(json_file)
+# with open('./output/linksToBeClicked.json') as json_file:
+json_file = open('./output/linksToBeClicked.json', 'r')
+linksToBeClicked = json.load(json_file)
 
 
 htmlContentInfo = []
@@ -10,7 +11,7 @@ htmlContentInfo = []
 
 def makeCSV():
     delimeter = ','
-    csvFile = open('./outputCSV.csv', 'w+')
+    csvFile = open('./output/outputCSV.csv', 'w+')
     csvFile.write(
         f'''"Syst. No"{delimeter} "Call #	"{delimeter} "Title"{delimeter} "Barcode"{delimeter} "Location"{delimeter} "Item Status"{delimeter}''')
     csvFile.write('\n')
