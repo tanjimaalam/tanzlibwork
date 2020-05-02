@@ -4,7 +4,15 @@ TRY_PAGES = 2
 currentPageURL = ''
 
 driver = webdriver.Chrome()
-lastLink = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/LYUHLKB86T9RK5AI6P5LRJQVXL7K7ARVVEY8FBARB8TB97BRBH-07753?func=scan-ind-continue&code=SHL&find_scan_code=SCAN_SHL&filing_text=ml%2128%20n5%20n384%202010&sequence=007046408'
+#lastLink = 'https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/LYUHLKB86T9RK5AI6P5LRJQVXL7K7ARVVEY8FBARB8TB97BRBH-07753?func=scan-ind-continue&code=SHL&find_scan_code=SCAN_SHL&filing_text=ml%2128%20n5%20n384%202010&sequence=007046408'
+
+askLastLink = '''
+oooooooooooooooooooooooooooooooooooooooooooooo
+Paste the last link traversed and press Enter.
+oooooooooooooooooooooooooooooooooooooooooooooo
+
+'''
+lastLink = input(askLastLink)
 driver.get(lastLink)
 
 linksToBeClicked = []
@@ -65,7 +73,7 @@ def runAutomationRecursive():
         print('----------------------')
         runAutomationRecursive()
     else:
-        print('----------------------')
+        print('-------The last link is just above---------------')
 
 
 runAutomationRecursive()

@@ -79,7 +79,7 @@ def runAutomationRecursive():
         print('----------------------')
         runAutomationRecursive()
     else:
-        print('----------------------')
+        print('-------The last link is just above---------------')
 
 
 runAutomationRecursive()

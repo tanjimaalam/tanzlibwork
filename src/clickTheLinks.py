@@ -85,5 +85,17 @@ for i in range(len(linksToBeClicked)):
     )
 
     makeCSV()
-
     newDriver.close()
+
+
+# print success or failure
+print('''
+ooooooooooooooooooooooooooooooo
+If you see no errors above, then bingo!
+Find the outputCSV.csv file in the output folder.
+
+If there were errors, then :'(
+Run again by pressing <Up Arrow> and then <Enter>
+ooooooooooooooooooooooooooooooo
+
+''')
