@@ -5,32 +5,43 @@ import json
 json_file = open('./output/linksToBeClicked.json', 'r')
 linksToBeClicked = json.load(json_file)
 
+lsatLink = input(''' 
+    oooooooooooooooooooooooo
+      Last Oversized link?
+    oooooooooooooooooooooooo
+
+''')
+
+
+def getLastLinkIndexInJSON(linksToBeClicked):
+    for i in range(len(linksToBeClicked)):
+        if linksToBeClicked[i] == lsatLink:
+            return i
+
 
 htmlContentInfo = []
 
 
-def makeCSV():
+def appendToCSV():
     delimeter = ','
-    csvFile = open('./output/outputCSV.csv', 'w+')
-    csvFile.write(
-        f'''"Syst. No"{delimeter} "Call #	"{delimeter} "Title"{delimeter} "Barcode"{delimeter} "Location"{delimeter} "Item Status"{delimeter} "Status Field"{delimeter}''')
-    csvFile.write('\n')
+    csvFile = open('./output/outputCSV.csv', 'a')
 
-    for i in range(len(htmlContentInfo)):
-        csvFile.write(htmlContentInfo[i]["currentSYS"] + delimeter)
-        csvFile.write(htmlContentInfo[i]["currentCallNumber"] + delimeter)
-        csvFile.write(htmlContentInfo[i]["currentBookTitle"] + delimeter)
+    for j in range(len(htmlContentInfo)):
+        csvFile.write(htmlContentInfo[j]["currentSYS"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentCallNumber"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentBookTitle"] + delimeter)
         # csvFile.write('book name' + ',')
-        csvFile.write(htmlContentInfo[i]["currentBarCode"] + delimeter)
-        csvFile.write(htmlContentInfo[i]["currentLocation"] + delimeter)
-        csvFile.write(htmlContentInfo[i]["currentItemStatus"] + delimeter)
-        csvFile.write(htmlContentInfo[i]["currentStatusField"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentBarCode"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentLocation"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentItemStatus"] + delimeter)
+        csvFile.write(htmlContentInfo[j]["currentStatusField"] + delimeter)
         csvFile.write('\n')
     csvFile.close()
 
 
 # open links and find location and call number
-for i in range(len(linksToBeClicked)):
+lastLinkIndex = getLastLinkIndexInJSON(linksToBeClicked)
+for i in range(len(linksToBeClicked))[lastLinkIndex: len(linksToBeClicked)]:
 
     print('')
     print('-------- getting info from -------------')
@@ -116,7 +127,7 @@ for i in range(len(linksToBeClicked)):
         }
     )
 
-    makeCSV()
+    appendToCSV()
     newDriver.close()
 
 
@@ -126,8 +137,11 @@ ooooooooooooooooooooooooooooooo
 If you see no errors above, then bingo!
 Find the outputCSV.csv file in the output folder.
 
-If there were errors, then :'(
-Run again by pressing <Up Arrow> and then <Enter>
+If there were errors, then run: 
+
+      python ./src/resumeClickTheLinks.py
+
+and copy-paste the last link found a bit upstairs.
 ooooooooooooooooooooooooooooooo
 
 ''')
