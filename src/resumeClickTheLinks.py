@@ -24,7 +24,7 @@ htmlContentInfo = []
 
 def appendToCSV():
     delimeter = ','
-    csvFile = open('./output/outputCSV.csv', 'a')
+    csvFile = open('./output/outputCSV.csv', 'a', encoding="utf-8")
 
     for j in range(len(htmlContentInfo)):
         csvFile.write(htmlContentInfo[j]["currentSYS"] + delimeter)
@@ -48,7 +48,7 @@ for i in range(len(linksToBeClicked))[lastLinkIndex: len(linksToBeClicked)]:
     print(linksToBeClicked[i])
     print('')
 
-    newDriver = webdriver.Chrome()
+    newDriver = webdriver.Chrome('./chromedriver/chromedriver.exe')
     newDriver.get(linksToBeClicked[i])
 
     td_all = newDriver.find_elements_by_tag_name('td')

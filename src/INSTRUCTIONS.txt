@@ -1,0 +1,20 @@
+https://libsearch-cuny-edu.ccny-proxy1.libr.ccny.cuny.edu/F/?func=find-b-0&local_base=city
+
+
+select search type: call number
+search for: 61
+select library:	city college and dsi
+
+links should appear
+
+enter the i'th link
+if call number == city college music:
+	find
+		syst. no		click MARC, find SYS number at the bottom
+		call number 		click "call numbers and locations", pick call number
+		title			pick title
+		barcode			go to call number page, click expand, pick barcode
+		location		click "call numbers and locations", pick location
+		item status		go to call number page, pick item status
+		status field		Return from MARC, click Label, find status field (not found if undefined)
+		

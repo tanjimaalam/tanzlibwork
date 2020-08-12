@@ -11,7 +11,7 @@ htmlContentInfo = []
 
 def makeCSV():
     delimeter = ','
-    csvFile = open('./output/outputCSV.csv', 'w+')
+    csvFile = open('./output/outputCSV.csv', 'w+', encoding="utf-8")
     csvFile.write(
         f'''"Syst. No"{delimeter} "Call #	"{delimeter} "Title"{delimeter} "Barcode"{delimeter} "Location"{delimeter} "Item Status"{delimeter} "Status Field"{delimeter}''')
     csvFile.write('\n')
@@ -37,7 +37,7 @@ for i in range(len(linksToBeClicked)):
     print(linksToBeClicked[i])
     print('')
 
-    newDriver = webdriver.Chrome()
+    newDriver = webdriver.Chrome('./chromedriver/chromedriver.exe')
     newDriver.get(linksToBeClicked[i])
 
     td_all = newDriver.find_elements_by_tag_name('td')
