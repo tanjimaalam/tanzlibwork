@@ -1,6 +1,7 @@
 import json
 from selenium import webdriver
 TRY_PAGES = 2
+CATALOG_NUM = '61'
 currentPageURL = ''
 
 driver = webdriver.Chrome('./chromedriver/chromedriver.exe')
@@ -17,7 +18,7 @@ callNumberOption.click()
 # insert 61 in search field
 searchBox = driver.find_element_by_xpath(
     '/html/body/form/table/tbody/tr/td[3]/input[1]')
-searchBox.send_keys('61')
+searchBox.send_keys(CATALOG_NUM)
 
 # initiate searching
 searchButton = driver.find_element_by_xpath(
@@ -44,13 +45,14 @@ def collect_links():
 
     td1_all = driver.find_elements_by_class_name('td1')
     for i in range(len(td1_all)):
-        aTags = td1_all[i].find_elements_by_css_selector('a')
-        if len(aTags) != 0:
-            for aTag in aTags:
-                href = aTag.get_attribute('href')
-                # linksToBeClicked.append(td1_all[i+1])
-                linksToBeClicked.append(href)
-        
+        if CATALOG_NUM in td1_all[i].text:
+            aTags = td1_all[i+1].find_elements_by_css_selector('a')
+            if len(aTags) != 0:
+                for aTag in aTags:
+                    href = aTag.get_attribute('href')
+                    # linksToBeClicked.append(td1_all[i+1])
+                    linksToBeClicked.append(href)
+            
 
 
 pageCount = 0

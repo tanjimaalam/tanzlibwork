@@ -59,18 +59,32 @@ for i in range(len(linksToBeClicked)):
         'loc-status').text).replace(',', ';')
 
     # Expand
-    currentExpandAnchor = newDriver.find_element_by_class_name(
-        'loc-library').find_element_by_xpath('..').find_element_by_class_name('td1').find_element_by_tag_name('a')
-    currentExpandAnchor.click()
+    expandAnchorLinks = []
+    a_all = newDriver.find_elements_by_css_selector('a')
+    for a in a_all:
+        if a.text == 'Expand':
+            expandAnchorLinks.append(a.get_attribute('href'))
 
-    currentBarCode = "None"
-    td_all = newDriver.find_elements_by_tag_name('td')
-    for i in range(len(td_all)):
-        if "Barcode" in td_all[i].text:
-            currentBarCode = (td_all[i+1].text).replace(',', ';')
+    currentBarCodes = []
+    for expandLink in expandAnchorLinks:
+        # expandLink.click()
+        expandLinkDriver = webdriver.Chrome('./chromedriver/chromedriver.exe')
+        expandLinkDriver.get(expandLink)
 
-    # go back 2 steps
-    newDriver.execute_script("window.history.go(-2)")
+        #currentExpandAnchor = newDriver.find_element_by_class_name('loc-library').find_element_by_xpath('..').find_element_by_class_name('td1').find_element_by_tag_name('a')
+        # currentExpandAnchor.click()
+
+        currentBarCode = "None"
+        td_all = expandLinkDriver.find_elements_by_tag_name('td')
+        for i in range(len(td_all)):
+            if "Barcode" in td_all[i].text:
+                currentBarCode = (td_all[i+1].text).replace(',', ';')
+                currentBarCodes.append(currentBarCode)
+
+        expandLinkDriver.close()
+
+    # go back 1 steps
+    newDriver.execute_script("window.history.go(-1)")
 
     aTag_all = newDriver.find_elements_by_tag_name('a')
     for i in range(len(aTag_all)):
@@ -103,18 +117,19 @@ for i in range(len(linksToBeClicked)):
             currentStatusField = td_all[i+1].text
             break
 
-    htmlContentInfo.append(
-        {
-            "currentCallNumber": currentCallNumber,
-            # "currentBookTitle": currentBookTitle,
-            "currentBookTitle": str(currentBookTitle),
-            "currentBarCode": str(currentBarCode),
-            "currentItemStatus": currentItemStatus,
-            "currentLocation": currentLocation,
-            "currentSYS": str(currentSYS),
-            "currentStatusField": currentStatusField
-        }
-    )
+    for currentBarCode in currentBarCodes:
+        htmlContentInfo.append(
+            {
+                "currentCallNumber": currentCallNumber,
+                # "currentBookTitle": currentBookTitle,
+                "currentBookTitle": str(currentBookTitle),
+                "currentBarCode": str(currentBarCode),
+                "currentItemStatus": currentItemStatus,
+                "currentLocation": currentLocation,
+                "currentSYS": str(currentSYS),
+                "currentStatusField": currentStatusField
+            }
+        )
 
     makeCSV()
     newDriver.close()

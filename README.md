@@ -24,7 +24,7 @@
 এরপর নিচের কমান্ডটি রান করতে হবেঃ
 
 ```
-    python ./src/onlyCollectOversizedLinks.py
+    python ./src/onlyCollect61Links.py
 ```
 
 রান করালে প্রোগ্রামটি নিজে নিজেই ব্রাউজার খুলে বেশ কিছু ডাটা কালেক্ট করতে থাকবে।
